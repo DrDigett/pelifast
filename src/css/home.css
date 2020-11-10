@@ -52,8 +52,10 @@ body {
 .logo-image {
   margin: 0;
 }
-.logo-image img {
+.logo-image h1 {
+  font-size: 90px;
   max-width: 100%;
+  color: #73C6B6;
 }
 
 .sidebarPlaylist {
@@ -219,7 +221,7 @@ body {
 
 
 .featuring {
-  background: linear-gradient(to right, #ff0000, #ff458b);
+  background-color:#73C6B6;
   display: flex;
   height: 100%;
   align-items: center;
