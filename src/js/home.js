@@ -1,38 +1,6 @@
-console.log('hola mundo!');
-
-const getUserAll = new Promise(function(todoBien, todoMal){
-  setTimeout(function(){
-    todoBien("se acabo el tiempoAll");
-  }, 5000)
-})
-
-const getUser = new Promise(function(todoBien, todoMal){
-  setTimeout(function(){
-    todoBien("se acabo el tiempo");
-  }, 3000)
-})
-//getUser
-//  .then(function() {
-//  console.log("todo esta bien")
-//})
-//  .catch(function(message){
-//    console.log(message)
-//})
-
-Promise.race([
-  getUser,
-  getUser,
-])
-
-.then(function(message){
-  console.log(message)
-})
-.catch(function(message) {
-  console.log(message)
-})
-///////////////////////////////
-
-$.ajax("https://randomuser.me/api/",{
+const fail= "algo fallo"
+/////////////CON jquery//////////////////
+  $.ajax("https://randomuser.me/api/",{
   method: "GET",
   success: function(data) {
     console.log(data)
@@ -41,3 +9,16 @@ $.ajax("https://randomuser.me/api/",{
     console.log(error)
   }
 })
+
+/////////////JavaScript Vanilla////////
+fetch("https://randomuser.me/api/")
+  .then(function (response){
+    return response.json()
+  })
+
+  .then(function(user){
+    console.log("user", user.results[0].name.first)
+  })
+  .catch(function(){
+    console.log(fail)
+  })
