@@ -30,3 +30,14 @@ Promise.race([
 .catch(function(message) {
   console.log(message)
 })
+///////////////////////////////
+
+$.ajax("https://randomuser.me/api/",{
+  method: "GET",
+  success: function(data) {
+    console.log(data)
+  },
+  error: function(error){
+    console.log(error)
+  }
+})
