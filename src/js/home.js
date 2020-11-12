@@ -8,11 +8,11 @@ const fail= "algo fallo"
   error: function(error){
     console.log(error)
   }
-})
+});
 
 /////////////JavaScript Vanilla////////
 fetch("https://randomuser.me/api/")
-  .then(function (response){
+  .then(function(response){
     return response.json()
   })
 
@@ -21,4 +21,4 @@ fetch("https://randomuser.me/api/")
   })
   .catch(function(){
     console.log(fail)
-  })
+  }); //Al acabar una promesa hay que poner un ; para evitar problemas
