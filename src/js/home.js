@@ -1,24 +1,15 @@
-const fail= "algo fallo"
-/////////////CON jquery//////////////////
-  $.ajax("https://randomuser.me/api/",{
-  method: "GET",
-  success: function(data) {
-    console.log(data)
-  },
-  error: function(error){
-    console.log(error)
+//////////////--------------////////
+(async function load() {
+  //accion
+  //terror
+  //animation
+  async function getData(url){
+    const response = await fetch(url)
+    const data = await response.json();
+    return data;
   }
-});
-
-/////////////JavaScript Vanilla////////
-fetch("https://randomuser.me/api/")
-  .then(function(response){
-    return response.json()
-  })
-
-  .then(function(user){
-    console.log("user", user.results[0].name.first)
-  })
-  .catch(function(){
-    console.log(fail)
-  }); //Al acabar una promesa hay que poner un ; para evitar problemas
+   const actionList = await getData("https://yts.mx/api/v2/list_movies.json?genre=action")
+   const dramaList = await getData("https://yts.mx/api/v2/list_movies.json?genre=drama")
+   const animationList = await getData("https://yts.mx/api/v2/list_movies.json?genre=animation")
+   console.log(actionList, dramaList, animationList);
+})()
