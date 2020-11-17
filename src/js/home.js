@@ -24,19 +24,31 @@
        </div>`
      )
    }
-
-    const $actionContainer = document.querySelector("#action");
-    actionList.data.movies.forEach((movie) => {
-
-    const HTMLString = videoItemTemplate(movie);
+   function createTemplate(HTMLString){
      const html = document.implementation.createHTMLDocument(); //para agregar el template en html
      html.body.innerHTML = HTMLString; //rebuscando en html ponemos la variable HTMLString
-     $actionContainer.append(html.body.children[0]);//el hijo 0(div) para aregregar
-   })
+     return html.body.children[0];//el hijo 0(div) para aregregar
+   }
+
+    function renderMovieList(list, $container){
+
+     $container.children[0].remove(); //esto es para eliminar el circulo de carga
+     list.forEach((movie) => {
+       const HTMLString = videoItemTemplate(movie);
+       const movieElement = createTemplate(HTMLString)
+       $container.append(movieElement);
+     })
+ }
+
+  const $actionContainer = document.getElementById("action");
+  renderMovieList(actionList.data.movies, $actionContainer)
 
 
   const $dramaContainer = document.querySelector("#drama");
+  renderMovieList(dramaList.data.movies, $dramaContainer)
+
   const $animationContainer = document.querySelector("#animation");
+  renderMovieList(animationList.data.movies, $animationContainer)
 
   const $featuringContainer = document.getElementById("#featuring")
   const $form = document.getElementById("#form");
