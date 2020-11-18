@@ -8,9 +8,54 @@
     //document.getElementById("modal") "un modal "
     //document.getElementByClassName("modal") Cuantos "modal tengo"
     //document.getElementByTagName("div") Cuantas etiquetas div tengo
-   const actionList = await getData("https://yts.mx/api/v2/list_movies.json?genre=action")
-   const dramaList = await getData("https://yts.mx/api/v2/list_movies.json?genre=drama")
-   const animationList = await getData("https://yts.mx/api/v2/list_movies.json?genre=animation")
+   const $form = document.getElementById("form");
+   const $home = document.getElementById("home");
+   const $featuringContainer = document.getElementById("featuring")
+
+  function setAttributes($element, attributes){
+    //esta funcion es para cambiar multiples atributos
+    for(const attribute in attributes){
+      $element.setAttribute(attribute, attributes[attribute]);
+    }
+  }
+
+  const BASE_API = 'https://yts.mx/api/v2/';
+  function featuringTemplate(peli){
+    return (
+      `
+      <div class="featuring">
+        <div class="featuring-image">
+          <img src="${peli.medium_cover_image}" width="70" height="100" alt="">
+        </div>
+        <div class="featuring-content">
+          <p class="featuring-title">Pelicula encontrada</p>
+          <p class="featuring-album">${peli.title}</p>
+        </div>
+      </div>
+      `
+    )
+  }
+
+  $form.addEventListener('submit', async (event)=> {
+    $home.classList.add("search-active")
+    event.preventDefault();
+    const $loader = document.createElement('img');
+    setAttributes($loader,{
+      src: 'src/images/loader.gif',
+      height: 50,
+      width: 50,
+    })
+    $featuringContainer.append($loader);
+
+    const data = new FormData($form);
+    const peli = await getData(`${BASE_API}list_movies.json?limit=1&query_term${data.get('name')}`)
+    const HTMLString = featuringTemplate(peli.data.movies[0]);
+    $featuringContainer.innerHTML=HTMLString;
+  })
+
+   const actionList = await getData(`${BASE_API}list_movies.json?genre=action`)
+   const dramaList = await getData(`${BASE_API}list_movies.json?genre=drama`)
+   const animationList = await getData(`${BASE_API}list_movies.json?genre=animation`)
 
    function videoItemTemplate(movie){
      return (
@@ -30,13 +75,21 @@
      return html.body.children[0];//el hijo 0(div) para aregregar
    }
 
-    function renderMovieList(list, $container){
+   function addEventClick($element){
 
+     $element.addEventListener('click', () =>{
+       showModal()
+     })
+
+   }
+
+   function renderMovieList(list, $container){
      $container.children[0].remove(); //esto es para eliminar el circulo de carga
      list.forEach((movie) => {
        const HTMLString = videoItemTemplate(movie);
        const movieElement = createTemplate(HTMLString)
        $container.append(movieElement);
+        addEventClick(movieElement);
      })
  }
 
@@ -50,9 +103,7 @@
   const $animationContainer = document.querySelector("#animation");
   renderMovieList(animationList.data.movies, $animationContainer)
 
-  const $featuringContainer = document.getElementById("#featuring")
-  const $form = document.getElementById("#form");
-  const $home = document.getElementById("#home");
+
 
   const $modal = document.querySelector(".modal");
   const $overlay = document.getElementById("overlay");
@@ -62,5 +113,14 @@
     const $modalImage = $modal.querySelector("img")
     const $modalDescription = $modal.querySelector("p")
 
+  function showModal(){
+    $overlay.classList.add('active');
+    $modal.style.animation = 'modalIn .8s forwards';
+  }
 
+  $hideModal.addEventListener('click', hideModal);
+  function hideModal() {
+    $overlay.classList.remove('active');
+    $modal.style.animation = 'modalOut .8s forwards'
+  }
 })()
