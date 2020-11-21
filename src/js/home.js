@@ -107,18 +107,30 @@
       addEventClick(movieElement);
     })
   }
+  async function cacheExist(category){
+    const listName = `${category}List`;
+    const cacheList = window.localStorage.getItem('listName');
+    if(cacheList){
+      return  JSON.parse(cacheList);
+    }
+    const { data: { movies: data } }= await getData(`${BASE_API}list_movies.json?genre=${category}`);
+    window.localStorage.setItem(listName, JSON.stringify(data));
 
+    return data;
+  }
 
-  const { data: { movies: actionList} } = await getData(`${BASE_API}list_movies.json?genre=action`)
+  //const { data: { movies: actionList} } = await getData(`${BASE_API}list_movies.json?genre=action`)
+  const actionList = await await cacheExist('action');
+  // window.localStorage.setItem('actionList',JSON.stringify(actionList))
   const $actionContainer = document.querySelector('#action');
   renderMovieList(actionList, $actionContainer, 'action');
 
-  const { data: { movies: dramaList } } = await getData(`${BASE_API}list_movies.json?genre=drama`)
+  const dramaList = await await cacheExist(`drama`);
   const $dramaContainer = document.getElementById('drama');
   renderMovieList(dramaList, $dramaContainer, 'drama');
 
+  const animationList= await await cacheExist(`animation`);
   const $animationContainer = document.getElementById('animation');
-  const { data: { movies: animationList } } = await getData(`${BASE_API}list_movies.json?genre=animation`)
   renderMovieList(animationList, $animationContainer, 'animation');
 
 
@@ -167,52 +179,4 @@
     $modal.style.animation = 'modalOut .8s forwards';
 
   }
-
-
 })()
-function friendTemplate(user){
-  `
-  <div class="sidebarPlaylist">
-    <h2 class="sidebarPlaylist-title">Playlist de amigos</h2>
-    <ul class="playlistFriends">
-
-      <li class="playlistFriends-item">
-        <a href="#">
-          <img src="src/images/covers/echame-la-culpa.jpg" alt="echame la culpa" />
-          <span>
-            ${user.results[0].name.first}
-          </span>
-        </a>
-      </li>
-
-      <li class="playlistFriends-item">
-        <a href="#">
-          <img src="src/images/covers/echame-la-culpa.jpg" alt="echame la culpa" />
-          <span>
-            Leonidas Esteban
-          </span>
-        </a>
-      </li>
-
-      <li class="playlistFriends-item">
-        <a href="#">
-          <img src="src/images/covers/echame-la-culpa.jpg" alt="echame la culpa" />
-          <span>
-            Luis Fonsi
-          </span>
-        </a>
-      </li>
-
-    </ul>
-  </div>
-  `
-}
-
-fetch('https://randomuser.me/api/')
-  .then(function (response){
-    return response.json()
-  })
-  .then( (user) =>{
-    console.log("user " user.results[0].name.first);
-  })
-  .catch( () => {alert("algo fallo")} )
